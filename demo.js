@@ -7,18 +7,17 @@
  *
  * @param   {H.service.Platform} platform    A stub class to access HERE services
  */
-function calculateRouteFromAtoB (platform) {
-    var router = platform.getRoutingService(),
-      routeRequestParams = {
-        mode: 'shortest;pedestrian',
-        representation: 'display',
-        waypoint0: '47.207320,-1.555843', 
-        waypoint1: '47.212528,-1.562238',  
-        routeattributes: 'waypoints,summary,shape,legs',
-        maneuverattributes: 'direction,action'
-      };
-  
-  
+function calculateRouteFromAtoB (platform, lat, long) {
+  var router = platform.getRoutingService(),
+    routeRequestParams = {
+      mode: 'shortest;pedestrian',
+      representation: 'display',
+      waypoint0: lat + ',' + long,
+      waypoint1: '47.212528,-1.562238',
+      routeattributes: 'waypoints,summary,shape,legs',
+      maneuverattributes: 'direction,action',
+  };
+
     router.calculateRoute(
       routeRequestParams,
       onSuccess,
@@ -265,6 +264,7 @@ function calculateRouteFromAtoB (platform) {
   Number.prototype.toMMSS = function () {
     return  Math.floor(this / 60)  +' minutes '+ (this % 60)  + ' seconds.';
   }
-  
-  // Now use the map as required...
-  calculateRouteFromAtoB (platform);
+
+navigator.geolocation.getCurrentPosition((position) => {
+  calculateRouteFromAtoB (platform, position.coords.latitude, position.coords.longitude);
+});
