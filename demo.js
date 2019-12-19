@@ -193,9 +193,6 @@ function calculateRouteFromAtoB (platform) {
     // Add the polyline to the map
     map.addObject(polyline);
     // And zoom to its bounding rectangle
-    map.getViewModel().setLookAtData({
-      bounds: polyline.getBoundingBox()
-    });
   }
   
   
