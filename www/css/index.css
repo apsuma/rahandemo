@@ -1,0 +1,194 @@
+
+* {
+    -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+}
+
+body {
+    -webkit-touch-callout: none;
+    -webkit-text-size-adjust: none;
+    -webkit-user-select: none;
+    background-image: url('../img/pheasant.png');
+    background-color:#E4E4E4;
+    background-attachment:fixed;
+    font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
+    font-size:12px;
+    height:100%;
+    margin:0px;
+    padding:0px;
+    text-transform:uppercase;
+    width:100%;
+}
+
+/* Portrait layout (default) */
+.app {
+    /*background:url(../img/logo.png) no-repeat center top; !* 170px x 200px *!*/
+    position:absolute;             /* position in the center of the screen */
+    left:50%;
+    height:50px;                   /* text area height */
+    width:225px;                   /* text area width */
+    text-align:center;
+    padding:180px 0 0 0;     /* image height is 200px (bottom 20px are overlapped with text) */
+    margin:-75px 0 0 -112px;  /* offset vertical: half of image height and text area height */
+                                   /* offset horizontal: half of text area width */
+}
+
+/* Landscape layout (with min-width) */
+@media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
+    .app {
+        background-position:center;
+        padding:75px 0 75px 170px;  /* padding-top + padding-bottom + text area = image height */
+        margin:-90px 0 0 -198px;  /* offset vertical: half of image height */
+                                      /* offset horizontal: half of image width and text area width */
+    }
+}
+
+h1 {
+    font-size:24px;
+    font-weight:normal;
+    margin:0;
+    overflow:visible;
+    padding:0;
+    text-align:center;
+}
+
+
+
+form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 130px;
+    font-family: 'Roboto Condensed', sans-serif;
+
+
+}
+
+label {
+    font-size: 30px;
+}
+
+.frame {
+    position: absolute;
+    margin-top: -200px;
+    margin-left: -200px;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.thermostat {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    top: 100px;
+    left: 100px;
+    background: #F2F2F2;
+    border-radius: 50%;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.8);
+}
+
+.thermostat .control {
+    position: absolute;
+    z-index: 5;
+    width: 130px;
+    height: 130px;
+    top: 25%;
+    left: 35px;
+    background: #E6E6E6;
+    border-radius: 50%;
+    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.7);
+}
+.thermostat .control .temp_outside {
+    position: absolute;
+    top: 25px;
+    left: 6px;
+    right: 0;
+    text-align: center;
+    font-weight: 300;
+    font-size: 1rem;
+}
+.thermostat .control .temp_room {
+    position: absolute;
+    top: 34px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-weight: 400;
+    font-size: 60px;
+    line-height: 60px;
+    color: #b6bbbb;
+    letter-spacing: -8px;
+    padding-right: 12px;
+    opacity: 1;
+    transform: translateX(0);
+    transition: all .5s ease-in-out;
+}
+.thermostat .control .temp_room span {
+    position: absolute;
+    top: 0;
+    right: 37px;
+    font-size: 2rem;
+    line-height: 34px;
+    padding: 3px 0 0 7px;
+    color: #b6bbbb;
+}
+.room {
+    position: absolute;
+    bottom: 18px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-weight: 300;
+    font-size: 30px;
+    color: white;
+}
+.thermostat .ring {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    top: 10px;
+    left: 10px;
+    background-color: #6C737E;
+    border-radius: 50%;
+    box-shadow: inset 2px 4px 4px 0px rgba(0, 0, 0, 0.3);
+}
+.thermostat .ring .bottom_overlay {
+    position: absolute;
+    width: 95px;
+    height: 95px;
+    top: 50%;
+    left: 50%;
+    background: #F2F2F2;
+    transform-origin: 0 0;
+    transform: rotate(45deg);
+    border-radius: 0 0 95px 0;
+}
+
+#slider {
+    position: absolute;
+    width: 170px;
+    height: 150px;
+    top: 36%;
+    left: 32%;
+    z-index: 1000;
+}
+
+.btn {
+    margin-top: 150px;
+}
+
+.boutonSlider {
+    height: 30px;
+    width: 10px;
+    background-color: rgba(0, 0, 0, 0.71);
+    margin: auto;
+    border-radius: 13px;
+}
+
+.minutesChoice {
+    background-color: inherit;
+    color: white;
+    text-align: center;
+    outline-style: none;
+    border-style: none;
+}
+
