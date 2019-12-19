@@ -1,4 +1,16 @@
-/**
+navigator.geolocation.getCurrentPosition((position) => {
+
+  const time = 40;
+
+  const vitMoyenneMarche = 60;
+
+  const distTime = time * vitMoyenneMarche;
+
+  const distMoinsMarge = distTime * 0.8;
+
+  const distMaxRadius = distMoinsMarge / 2;
+
+  /**
  * Calculates and displays a walking route from the St Paul's Cathedral in London
  * to the Tate Modern on the south bank of the River Thames
  *
@@ -6,13 +18,62 @@
  * see:  http://developer.here.com/rest-apis/documentation/routing/topics/resource-calculate-route.html
  *
  * @param   {H.service.Platform} platform    A stub class to access HERE services
+ *
  */
-function calculateRouteFromAtoB (platform, lat, long) {
+  function createResizableCircle(map,radius) {
+    var circle = new H.map.Circle(
+        {lat: position.coords.latitude, lng: position.coords.longitude},
+        distMaxRadius,
+        {
+          style: {fillColor: 'rgba(250, 250, 0, 0.3)', lineWidth: 0}
+        }
+        ),
+        circleOutline = new H.map.Polyline(
+            circle.getGeometry().getExterior(),
+            {
+              style: {lineWidth: 8, strokeColor: 'rgba(255, 0, 0, 0)'}
+            }
+        ),
+        circleGroup = new H.map.Group({
+          volatility: true, // mark the group as volatile for smooth dragging of all it's objects
+          objects: [circle, circleOutline]
+        }),
+        circleTimeout;
+
+    // ensure that the objects can receive drag events
+    circle.draggable = true;
+    circleOutline.draggable = true;
+
+    // extract first point of the circle outline polyline's LineString and
+    // push it to the end, so the outline has a closed geometry
+    circleOutline.getGeometry().pushPoint(circleOutline.getGeometry().extractPoint(0));
+
+    // add group with circle and it's outline (polyline)
+    map.addObject(circleGroup);
+
+    // event listener for circle group to show outline (polyline) if moved in with mouse (or touched on touch devices)
+
+
+    // event listener for circle group to hide outline if moved out with mouse (or released finger on touch devices)
+    // the outline is hidden on touch devices after specific timeout
+
+    // event listener for circle group to change the cursor if mouse position is over the outline polyline (resizing is allowed)
+    circleGroup.addEventListener('pointermove', function(evt) {
+      if (evt.target instanceof H.map.Polyline) {
+        document.body.style.cursor = 'pointer';
+      } else {
+        document.body.style.cursor = 'default'
+      }
+    }, true);
+  }
+
+function calculateRouteFromAtoB (platform) {
+
   var router = platform.getRoutingService(),
     routeRequestParams = {
       mode: 'shortest;pedestrian',
       representation: 'display',
-      waypoint0: lat + ',' + long,
+      waypoint0: position.coords.latitude + ',' + position.coords.longitude,
       waypoint1: '47.212528,-1.562238',
       routeattributes: 'waypoints,summary,shape,legs',
       maneuverattributes: 'direction,action',
@@ -57,39 +118,38 @@ function calculateRouteFromAtoB (platform, lat, long) {
   /**
    * Boilerplate map initialization code starts below:
    */
-  
   // set up containers for the map  + panel
   var mapContainer = document.getElementById('map'),
     routeInstructionsContainer = document.getElementById('panel');
-  
+
   //Step 1: initialize communication with the platform
   // In your own code, replace variable window.apikey with your own apikey
   var platform = new H.service.Platform({
     apikey: window.apikey
   });
   var defaultLayers = platform.createDefaultLayers();
-  
-  //Step 2: initialize a map - this map is centered over Berlin
+
+  //Step 2: initialize a map - this map is centered over your position
   var map = new H.Map(mapContainer,
     defaultLayers.vector.normal.map,{
-    center: {lat:47.207320, lng:-1.555843},
+    center: {lat: position.coords.latitude, lng:position.coords.longitude},
     zoom: 13,
     pixelRatio: window.devicePixelRatio || 1
   });
   // add a resize listener to make sure that the map occupies the whole container
   window.addEventListener('resize', () => map.getViewPort().resize());
-  
+
   //Step 3: make the map interactive
   // MapEvents enables the event system
   // Behavior implements default interactions for pan/zoom (also on mobile touch environments)
   var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-  
+
   // Create the default UI components
   var ui = H.ui.UI.createDefault(map, defaultLayers);
-  
+
   // Hold a reference to any infobubble opened
   var bubble;
-  
+
   /**
    * Opens/Closes a infobubble
    * @param  {H.geo.Point} position     The location on the map.
@@ -118,7 +178,7 @@ function calculateRouteFromAtoB (platform, lat, long) {
     var lineString = new H.geo.LineString(),
       routeShape = route.shape,
       polyline;
-  
+
     routeShape.forEach(function(point) {
       var parts = point.split(',');
       lineString.pushLatLngAlt(parts[0], parts[1]);
@@ -264,7 +324,6 @@ function calculateRouteFromAtoB (platform, lat, long) {
   Number.prototype.toMMSS = function () {
     return  Math.floor(this / 60)  +' minutes '+ (this % 60)  + ' seconds.';
   }
-
-navigator.geolocation.getCurrentPosition((position) => {
-  calculateRouteFromAtoB (platform, position.coords.latitude, position.coords.longitude);
+  createResizableCircle(map);
+  calculateRouteFromAtoB (platform);
 });
