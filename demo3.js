@@ -6,7 +6,7 @@
  */
 function createResizableCircle(map,radius) {
   var circle = new H.map.Circle(
-        {lat: 47.2135655, lng: -1.5496263},
+        {lat: position.coords.latitude, lng: position.coords.longitude},
         500,
         {
           style: {fillColor: 'rgba(250, 250, 0, 0.3)', lineWidth: 0}
@@ -37,11 +37,6 @@ function createResizableCircle(map,radius) {
 
   // event listener for circle group to show outline (polyline) if moved in with mouse (or touched on touch devices)
   circleGroup.addEventListener('pointerenter', function(evt) {
-    var currentStyle = circleOutline.getStyle(),
-        newStyle = currentStyle.getCopy({
-          strokeColor: 'rgb(255, 0, 0)'
-        });
-
     if (circleTimeout) {
       clearTimeout(circleTimeout);
       circleTimeout = null;
@@ -73,57 +68,11 @@ function createResizableCircle(map,radius) {
       document.body.style.cursor = 'default'
     }
   }, true);
-
-  // event listener for circle group to resize the geo circle object if dragging over outline polyline
-  circleGroup.addEventListener('drag', function(evt) {
-    var pointer = evt.currentPointer,
-        distanceFromCenterInMeters = circle.getCenter().distance(map.screenToGeo(pointer.viewportX, pointer.viewportY));
-
-    // if resizing is alloved, set the circle's radius
-    if (evt.target instanceof H.map.Polyline) {
-      circle.setRadius(distanceFromCenterInMeters);
-
-      // use circle's updated geometry for outline polyline
-      var outlineLinestring = circle.getGeometry().getExterior();
-
-      // extract first point of the outline LineString and push it to the end, so the outline has a closed geometry
-      outlineLinestring.pushPoint(outlineLinestring.extractPoint(0));
-      circleOutline.setGeometry(outlineLinestring);
-
-      // prevent event from bubling, so map doesn't receive this event and doesn't pan
-      evt.stopPropagation();
-    }
-  }, true);
 }
 
 /**
  * Boilerplate map initialization code starts below:
  */
-
-//Step 1: initialize communication with the platform
-// In your own code, replace variable window.apikey with your own apikey
-const platform = new H.service.Platform({
-  apikey: window.apikey
-});
-const defaultLayers = platform.createDefaultLayers();
-
-//Step 2: initialize a map - this map is centered over Nantes
-let map = new H.Map(document.getElementById('map'),
-  defaultLayers.vector.normal.map, {
-  center: {lat: 47.2135655, lng: -1.5496263},
-  zoom: 13,
-  pixelRatio: window.devicePixelRatio || 1
-});
-// add a resize listener to make sure that the map occupies the whole container
-window.addEventListener('resize', () => map.getViewPort().resize());
-
-//Step 3: make the map interactive
-// MapEvents enables the event system
-// Behavior implements default interactions for pan/zoom (also on mobile touch environments)
-var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-
-// Step 4: Create the default UI:
-var ui = H.ui.UI.createDefault(map, defaultLayers, 'en-US');
 
 // Step 5: Add resizable geo shapes
 createResizableCircle(map);
