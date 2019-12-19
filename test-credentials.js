@@ -1,1 +1,0 @@
-var apikey = '4aUve53CcW7gdAUsWr_XsfuYc8x8vP3BxTE3jynfa9U';
