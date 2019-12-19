@@ -1,6 +1,13 @@
+function validation() {
+  document.getElementById('validation').addEventListener("click", () => {
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('show').style.display = 'block';
+  });
+}
+
 navigator.geolocation.getCurrentPosition((position) => {
 
-  const time = 40;
+  let time = document.getElementById('minutesChoice').value;
 
   const vitMoyenneMarche = 60;
 
@@ -100,13 +107,13 @@ function calculateRouteFromAtoB (platform) {
     */
     addRouteShapeToMap(route);
     addManueversToMap(route);
-  
+
     addWaypointsToPanel(route.waypoint);
     addManueversToPanel(route);
     addSummaryToPanel(route.summary);
     // ... etc.
   }
-  
+
   /**
    * This function will be called if a communication error occurs during the JSON-P request
    * @param  {Object} error  The error message received.
@@ -114,7 +121,7 @@ function calculateRouteFromAtoB (platform) {
   function onError(error) {
     alert('Can\'t reach the remote server');
   }
-  
+
   /**
    * Boilerplate map initialization code starts below:
    */
@@ -168,8 +175,8 @@ function calculateRouteFromAtoB (platform) {
       bubble.open();
     }
   }
-  
-  
+
+
   /**
    * Creates a H.map.Polyline from the shape of the route and adds it to the map.
    * @param {Object} route A route as received from the H.service.RoutingService
@@ -183,7 +190,7 @@ function calculateRouteFromAtoB (platform) {
       var parts = point.split(',');
       lineString.pushLatLngAlt(parts[0], parts[1]);
     });
-  
+
     polyline = new H.map.Polyline(lineString, {
       style: {
         lineWidth: 4,
@@ -194,8 +201,8 @@ function calculateRouteFromAtoB (platform) {
     map.addObject(polyline);
     // And zoom to its bounding rectangle
   }
-  
-  
+
+
   /**
    * Creates a series of H.map.Marker points from the route and adds them to the map.
    * @param {Object} route  A route as received from the H.service.RoutingService
@@ -210,7 +217,7 @@ function calculateRouteFromAtoB (platform) {
       group = new  H.map.Group(),
       i,
       j;
-  
+
     // Add a marker for each maneuver
     for (i = 0;  i < route.leg.length; i += 1) {
       for (j = 0;  j < route.leg[i].maneuver.length; j += 1) {
@@ -225,41 +232,41 @@ function calculateRouteFromAtoB (platform) {
         group.addObject(marker);
       }
     }
-  
+
     group.addEventListener('tap', function (evt) {
       map.setCenter(evt.target.getGeometry());
       openBubble(
          evt.target.getGeometry(), evt.target.instruction);
     }, false);
-  
+
     // Add the maneuvers group to the map
     map.addObject(group);
   }
-  
-  
+
+
   /**
    * Creates a series of H.map.Marker points from the route and adds them to the map.
    * @param {Object} route  A route as received from the H.service.RoutingService
    */
   function addWaypointsToPanel(waypoints){
-  
-  
-  
+
+
+
     var nodeH3 = document.createElement('h3'),
       waypointLabels = [],
       i;
-  
-  
+
+
      for (i = 0;  i < waypoints.length; i += 1) {
       waypointLabels.push(waypoints[i].label)
      }
-  
+
      nodeH3.textContent = waypointLabels.join(' - ');
-  
+
     routeInstructionsContainer.innerHTML = '';
     routeInstructionsContainer.appendChild(nodeH3);
   }
-  
+
   /**
    * Creates a series of H.map.Marker points from the route and adds them to the map.
    * @param {Object} route  A route as received from the H.service.RoutingService
@@ -269,55 +276,55 @@ function calculateRouteFromAtoB (platform) {
      content = '';
      content += '<b>Total distance</b>: ' + summary.distance  + 'm. <br/>';
      content += '<b>Travel Time</b>: ' + summary.travelTime.toMMSS() + ' (in current traffic)';
-  
-  
+
+
     summaryDiv.style.fontSize = 'small';
     summaryDiv.style.marginLeft ='5%';
     summaryDiv.style.marginRight ='5%';
     summaryDiv.innerHTML = content;
     routeInstructionsContainer.appendChild(summaryDiv);
   }
-  
+
   /**
    * Creates a series of H.map.Marker points from the route and adds them to the map.
    * @param {Object} route  A route as received from the H.service.RoutingService
    */
   function addManueversToPanel(route){
-  
-  
-  
+
+
+
     var nodeOL = document.createElement('ol'),
       i,
       j;
-  
+
     nodeOL.style.fontSize = 'small';
     nodeOL.style.marginLeft ='5%';
     nodeOL.style.marginRight ='5%';
     nodeOL.className = 'directions';
-  
+
        // Add a marker for each maneuver
     for (i = 0;  i < route.leg.length; i += 1) {
       for (j = 0;  j < route.leg[i].maneuver.length; j += 1) {
         // Get the next maneuver.
         maneuver = route.leg[i].maneuver[j];
-  
+
         var li = document.createElement('li'),
           spanArrow = document.createElement('span'),
           spanInstruction = document.createElement('span');
-  
+
         spanArrow.className = 'arrow '  + maneuver.action;
         spanInstruction.innerHTML = maneuver.instruction;
         li.appendChild(spanArrow);
         li.appendChild(spanInstruction);
-  
+
         nodeOL.appendChild(li);
       }
     }
-  
+
     routeInstructionsContainer.appendChild(nodeOL);
   }
-  
-  
+
+
   Number.prototype.toMMSS = function () {
     return  Math.floor(this / 60)  +' minutes '+ (this % 60)  + ' seconds.';
   }

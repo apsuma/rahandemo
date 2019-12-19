@@ -22,6 +22,9 @@ body {
 /* Portrait layout (default) */
 .app {
     /*background:url(../img/logo.png) no-repeat center top; !* 170px x 200px *!*/
+    background-image: url('../img/pheasant.png');
+    background-color:#E4E4E4;
+    background-attachment:fixed;
     position:absolute;             /* position in the center of the screen */
     left:50%;
     height:50px;                   /* text area height */
@@ -29,7 +32,15 @@ body {
     text-align:center;
     padding:180px 0 0 0;     /* image height is 200px (bottom 20px are overlapped with text) */
     margin:-75px 0 0 -112px;  /* offset vertical: half of image height and text area height */
-                                   /* offset horizontal: half of text area width */
+        /* offset horizontal: half of text area width */
+    display: block;
+}
+
+.show {
+    display: none;
+    min-height: 100vm;
+    width: auto;
+    color: aliceblue;
 }
 
 /* Landscape layout (with min-width) */
