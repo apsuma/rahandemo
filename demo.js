@@ -1,6 +1,9 @@
+let queryNumber = document.getElementById('queryNumber');
+let time = queryNumber.value;
+
 navigator.geolocation.getCurrentPosition((position) => {
 
-  const time = 40;
+  console.log(time);
 
   const vitMoyenneMarche = 60;
 
@@ -325,5 +328,5 @@ function calculateRouteFromAtoB (platform) {
     return  Math.floor(this / 60)  +' minutes '+ (this % 60)  + ' seconds.';
   }
   createResizableCircle(map);
-  calculateRouteFromAtoB (platform);
+  calculateRouteFromAtoB(platform);
 });
