@@ -280,7 +280,24 @@ function calculateRouteFromAtoB (platform) {
     summaryDiv.innerHTML = content;
     routeInstructionsContainer.appendChild(summaryDiv);
   }
-  
+
+  /**
+   * Adds markers to the map highlighting the locations of the cultural places in Nantes.
+   *
+   * @param  {H.Map} map      A HERE Map instance within the application
+   */
+  function addMarkersToMap(map) {
+    console.log(map)
+    let luMarker = new H.map.Marker({lat:47.2152661555, lng:-1.54566621725});
+    map.addObject(luMarker);
+    let chateauMarker = new H.map.Marker({lat:47.2160563713, lng:-1.55001052667});
+    map.addObject(chateauMarker);
+    let bibMarker = new H.map.Marker({lat:47.2111500154, lng:-1.58560852342});
+    map.addObject(bibMarker);
+    let cosmopolisMarker = new H.map.Marker({lat:47.2144037562, lng:-1.5623519341});
+    map.addObject(cosmopolisMarker);
+  }
+
   /**
    * Creates a series of H.map.Marker points from the route and adds them to the map.
    * @param {Object} route  A route as received from the H.service.RoutingService
@@ -319,11 +336,15 @@ function calculateRouteFromAtoB (platform) {
   
     routeInstructionsContainer.appendChild(nodeOL);
   }
-  
-  
+
+
   Number.prototype.toMMSS = function () {
     return  Math.floor(this / 60)  +' minutes '+ (this % 60)  + ' seconds.';
   }
   createResizableCircle(map);
   calculateRouteFromAtoB (platform);
+
+    addMarkersToMap(map);
+
 });
+
