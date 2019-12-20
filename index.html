@@ -1,58 +1,219 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+    <title>Map with Driving Route from A to B</title>
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+    <link rel="stylesheet" type="text/css" href="demo.css" />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+    <link rel="stylesheet" type="text/css" href="../template.css" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <link rel="stylesheet" type="text/css" href="www/css/index.css" />
     <link rel="stylesheet" type="text/css" href="www/css/style.css" />
+    <script type="text/javascript" src='test-credentials.js'></script>    
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-core.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-service.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js"></script>
+    <script type="text/javascript" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"></script>
+    <script type="text/javascript" src="../js-examples-rendering-helpers/iframe-height.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap');
+      @import url('https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap');
     </style>
-    <title>Rahan PROJECT</title>
-</head>
-
-<body>
-    <div class="app">
-        <form method="post">
-            <div class="room">
-                <input id="minutesChoice" class="minutesChoice" type="number" value="30" min="0" max="60" name ="time">Minutes
+    <style type="text/css">
+      .directions li span.arrow {
+        display:inline-block;
+        min-width:28px;
+        min-height:28px;
+        background-position:0px;
+        background-image: url("https://heremaps.github.io/maps-api-for-javascript-examples/map-with-pedestrian-route-from-a-to-b/img/arrows.png");
+        position:relative;
+        top:8px;
+      }
+      .directions li span.depart  {
+        background-position:-28px;
+      }
+      .directions li span.rightUTurn  {
+        background-position:-56px;
+      }
+      .directions li span.leftUTurn  {
+        background-position:-84px;
+      }
+      .directions li span.rightFork  {
+        background-position:-112px;
+      }
+      .directions li span.leftFork  {
+        background-position:-140px;
+      }
+      .directions li span.rightMerge  {
+        background-position:-112px;
+      }
+      .directions li span.leftMerge  {
+        background-position:-140px;
+      }
+      .directions li span.slightRightTurn  {
+        background-position:-168px;
+      }
+      .directions li span.slightLeftTurn{
+        background-position:-196px;
+      }
+      .directions li span.rightTurn  {
+        background-position:-224px;
+      }
+      .directions li span.leftTurn{
+        background-position:-252px;
+      }
+      .directions li span.sharpRightTurn  {
+        background-position:-280px;
+      }
+      .directions li span.sharpLeftTurn{
+        background-position:-308px;
+      }
+      .directions li span.rightRoundaboutExit1 {
+        background-position:-616px;
+      }
+      .directions li span.rightRoundaboutExit2 {
+        background-position:-644px;
+      }
+      
+      .directions li span.rightRoundaboutExit3 {
+        background-position:-672px;
+      }
+      
+      .directions li span.rightRoundaboutExit4 {
+        background-position:-700px;
+      }
+      
+      .directions li span.rightRoundaboutPass {
+        background-position:-700px;
+      }
+      
+      .directions li span.rightRoundaboutExit5 {
+        background-position:-728px;
+      }
+      .directions li span.rightRoundaboutExit6 {
+        background-position:-756px;
+      }
+      .directions li span.rightRoundaboutExit7 {
+        background-position:-784px;
+      }
+      .directions li span.rightRoundaboutExit8 {
+        background-position:-812px;
+      }
+      .directions li span.rightRoundaboutExit9 {
+        background-position:-840px;
+      }
+      .directions li span.rightRoundaboutExit10 {
+        background-position:-868px;
+      }
+      .directions li span.rightRoundaboutExit11 {
+        background-position:896px;
+      }
+      .directions li span.rightRoundaboutExit12 {
+        background-position:924px;
+      }
+      .directions li span.leftRoundaboutExit1  {
+        background-position:-952px;
+      }
+      .directions li span.leftRoundaboutExit2  {
+        background-position:-980px;
+      }
+      .directions li span.leftRoundaboutExit3  {
+        background-position:-1008px;
+      }
+      .directions li span.leftRoundaboutExit4  {
+        background-position:-1036px;
+      }
+      .directions li span.leftRoundaboutPass {
+        background-position:1036px;
+      }
+      .directions li span.leftRoundaboutExit5  {
+        background-position:-1064px;
+      }
+      .directions li span.leftRoundaboutExit6  {
+        background-position:-1092px;
+      }
+      .directions li span.leftRoundaboutExit7  {
+        background-position:-1120px;
+      }
+      .directions li span.leftRoundaboutExit8  {
+        background-position:-1148px;
+      }
+      .directions li span.leftRoundaboutExit9  {
+        background-position:-1176px;
+      }
+      .directions li span.leftRoundaboutExit10  {
+        background-position:-1204px;
+      }
+      .directions li span.leftRoundaboutExit11  {
+        background-position:-1232px;
+      }
+      .directions li span.leftRoundaboutExit12  {
+        background-position:-1260px;
+      }
+      .directions li span.arrive  {
+        background-position:-1288px;
+      }
+      .directions li span.leftRamp  {
+        background-position:-392px;
+      }
+      .directions li span.rightRamp  {
+        background-position:-420px;
+      }
+      .directions li span.leftExit  {
+        background-position:-448px;
+      }
+      .directions li span.rightExit  {
+        background-position:-476px;
+      }
+      .directions li span.ferry  {
+        background-position:-1316px;
+      }
+      </style>
+  </head>
+  <body id="markers-on-the-map">
+  <div class="app" id="app">
+    <form method="post">
+      <div class="room">
+        <input id="minutesChoice" class="minutesChoice" type="number" value="30" min="0" max="60" name ="time">Minutes
+      </div>
+      <div class="form-group">
+        <div class="frame">
+          <div id="slider" class="rslider"></div>
+          <div class="thermostat">
+            <div class="ring">
+              <div class="bottom_overlay"></div>
             </div>
-            <div class="form-group">
-                <div class="frame">
-                    <div id="slider" class="rslider"></div>
-                    <div class="thermostat">
-                        <div class="ring">
-                            <div class="bottom_overlay"></div>
-                        </div>
 
-                        <div class="control" id="control" onclick="increment()">
-                            <div class ="boutonSlider" id="boutonSlider">
+            <div class="control" id="control" onclick="increment()">
+              <div class ="boutonSlider" id="boutonSlider">
 
-                            </div>
-                            <div class="temp_room"><span></span></div>
-                            <div id="minutes">
-                                <span></span>
-                            </div>
+              </div>
+              <div class="temp_room"><span></span></div>
+              <div id="minutes">
+                <span></span>
+              </div>
 
-                        </div>
-                    </div>
-
-                </div>
             </div>
-            <button type="submit" class="btn btn-secondary">J'ai du temps à perdre !</button>
-        </form>
+          </div>
+
         </div>
-    </div>
+      </div>
+      <div class="btn btn-secondary" id="validation" onclick="validation()"><p>J'ai du temps à perdre !</p></div>
+    </form>
+  </div>
+  <div class="show" id="show">
+    <div class="page-header">
+      <div id="map"></div>
+    <div id="panel"></div>
+  </div>
 
-    <script type="text/javascript" src="www/js/slider.js"></script>
+  <script type="text/javascript" src='demo.js'></script>
+  <script type="text/javascript" src="www/js/slider.js"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-
-</body>
-
+  </body>
 </html>
